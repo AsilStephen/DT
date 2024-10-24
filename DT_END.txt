@@ -1,0 +1,341 @@
+10.24 7:45 AM
+End DT practical 
+AJAX
+
+index.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<title>Product Calculator</title>
+<script>
+function calculateTotal() {
+var productName = document.getElementById('productName').value;
+var quantity = document.getElementById('quantity').value;
+var price = document.getElementById('price').value;
+// AJAX Script
+var xhr = new XMLHttpRequest();  //XMLHttpRequest Object
+xhr.open('POST', 'CalculateTotalServlet', true); // Request is Asynchronous
+xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+xhr.onreadystatechange = function() {//Event Handling
+if (xhr.readyState === 4 &&xhr.status === 200) {
+                    // Extract only the total amount from the response
+var responseText = xhr.responseText.trim();// Handling the Response
+document.getElementById('totalAmount').value = responseText;
+                }
+            };
+
+var params = 'productName=' + encodeURIComponent(productName) +
+                          '&quantity=' + encodeURIComponent(quantity) +
+                          '&price=' + encodeURIComponent(price);
+xhr.send(params);// Sending Data
+        }
+</script>
+</head>
+<body>
+<h1>Product Calculator</h1>
+<form id="productForm" onsubmit="event.preventDefault(); calculateTotal();">
+<label for="productName">Product Name:</label>
+<input type="text" id="productName" name="productName" required><br><br>
+<label for="quantity">Quantity:</label>
+<input type="number" id="quantity" name="quantity" required min="1"><br><br>
+<label for="price">Price:</label>
+<input type="number" id="price" name="price" required step="0.01" min="0"><br><br>
+<button type="submit">Calculate Total</button>
+</form>
+
+<br>
+<label for="totalAmount">Total Amount:</label>
+<input type="text" id="totalAmount" readonly><br><br>
+</body>
+</html>
+
+
+CalculateTotalServlet.java
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<title>Product Calculator</title>
+<script>
+function calculateTotal() {
+var productName = document.getElementById('productName').value;
+var quantity = document.getElementById('quantity').value;
+var price = document.getElementById('price').value;
+// AJAX Script
+var xhr = new XMLHttpRequest();  //XMLHttpRequest Object
+xhr.open('POST', 'CalculateTotalServlet', true); // Request is Asynchronous
+xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+xhr.onreadystatechange = function() {//Event Handling
+if (xhr.readyState === 4 &&xhr.status === 200) {
+                    // Extract only the total amount from the response
+var responseText = xhr.responseText.trim();// Handling the Response
+document.getElementById('totalAmount').value = responseText;
+                }
+            };
+
+var params = 'productName=' + encodeURIComponent(productName) +
+                          '&quantity=' + encodeURIComponent(quantity) +
+                          '&price=' + encodeURIComponent(price);
+xhr.send(params);// Sending Data
+        }
+</script>
+</head>
+<body>
+<h1>Product Calculator</h1>
+<form id="productForm" onsubmit="event.preventDefault(); calculateTotal();">
+<label for="productName">Product Name:</label>
+<input type="text" id="productName" name="productName" required><br><br>
+<label for="quantity">Quantity:</label>
+<input type="number" id="quantity" name="quantity" required min="1"><br><br>
+<label for="price">Price:</label>
+<input type="number" id="price" name="price" required step="0.01" min="0"><br><br>
+<button type="submit">Calculate Total</button>
+</form>
+
+<br>
+<label for="totalAmount">Total Amount:</label>
+<input type="text" id="totalAmount" readonly><br><br>
+</body>
+</html>
+
+
+XSLT
+transform.xslt
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:output method="html" indent="yes"/>
+        <!-- Root template -->
+    <xsl:template match="/">
+        <html>
+            <head>
+                <title>Library Book List</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 20px; }
+                    table { width: 100%; border-collapse: collapse; }
+                    th, td { border: 1px solid #ddd; padding: 8px; }
+                    th { background-color: #f2f2f2; }
+                </style>
+            </head>
+            <body>
+                <h1>Library Book List</h1>
+                <table>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Year</th>
+                    </tr>
+                    <xsl:apply-templates select="library/book"/>
+                </table>
+            </body>
+        </html>
+    </xsl:template>
+    
+    <!-- Template for book elements -->
+    <xsl:template match="book">
+        <tr>
+            <td><xsl:value-of select="title"/></td>
+            <td><xsl:value-of select="author"/></td>
+            <td><xsl:value-of select="year"/></td>
+        </tr>
+    </xsl:template>
+</xsl:stylesheet>
+
+data.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+    <book>
+        <title>The Great Gatsby</title>
+        <author>F. Scott Fitzgerald</author>
+        <year>1925</year>
+    </book>
+    <book>
+        <title>To Kill a Mockingbird</title>
+        <author>Harper Lee</author>
+        <year>1960</year>
+    </book>
+    <book>
+        <title>1984</title>
+        <author>George Orwell</author>
+        <year>1949</year>
+    </book>
+</library>
+
+index.jsp
+<%@ page import="javax.xml.transform.TransformerFactory, javax.xml.transform.Transformer, javax.xml.transform.stream.StreamSource, javax.xml.transform.stream.StreamResult, java.io.FileInputStream, java.io.StringWriter, java.io.File" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Library Book List</title>
+</head>
+<body>
+   
+    <%
+        try {
+            // Get the real path to the XML and XSLT files
+            String xmlPath = application.getRealPath("/data.xml");
+            String xsltPath = application.getRealPath("/transform.xslt");
+
+            
+// Check if the paths are valid
+            if (xmlPath == null || xsltPath == null) {
+                throw new RuntimeException("File paths are null. Ensure that the files are in the correct location.");
+            }
+                        // Create File objects for the paths
+            File xmlFile = new File(xmlPath);
+            File xsltFile = new File(xsltPath);
+            
+            // Check if files exist
+            if (!xmlFile.exists()) {
+                throw new RuntimeException("XML file does not exist: " + xmlPath);
+            }
+            if (!xsltFile.exists()) {
+                throw new RuntimeException("XSLT file does not exist: " + xsltPath);
+            }
+            // Create a TransformerFactory and load the XSLT file
+            TransformerFactory factory = TransformerFactory.newInstance();
+            javax.xml.transform.Source xmlSource = new StreamSource(new FileInputStream(xmlFile));
+            javax.xml.transform.Source xsltSource = new StreamSource(new FileInputStream(xsltFile));
+            StringWriter resultWriter = new StringWriter();
+            
+            Transformer transformer = factory.newTransformer(xsltSource);
+            transformer.transform(xmlSource, new StreamResult(resultWriter));
+                       
+ // Output the result
+            out.println(resultWriter.toString());
+        } catch (Exception e) {
+            // Handle exceptions and print error messages
+            e.printStackTrace();
+            out.println("Error: " + e.getMessage());
+        }
+    %>
+</body>
+</html>
+
+XML
+
+Student Profile
+
+student.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<student>
+    <personalInfo>
+        <name>John Doe</name>
+        <id>123456</id>
+        <major>Computer Science</major>
+        <year>2023</year>
+    </personalInfo>
+    <contact>
+        <email>john.doe@example.com</email>
+        <phone>+1234567890</phone>
+    </contact>
+    <courses>
+        <course>
+            <title>Introduction to Computer Science</title>
+            <code>CS101</code>
+            <credits>3</credits>
+        </course>
+        <course>
+            <title>Data Structures and Algorithms</title>
+            <code>CS201</code>
+            <credits>4</credits>
+        </course>
+    </courses>
+</student>
+
+
+
+
+profile.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('student.xml')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(data, 'text/xml');
+
+                    // Personal Info
+                    const name = xmlDoc.getElementsByTagName('name')[0]?.textContent || 'N/A';
+                    const id = xmlDoc.getElementsByTagName('id')[0]?.textContent || 'N/A';
+                    const major = xmlDoc.getElementsByTagName('major')[0]?.textContent || 'N/A';
+                    const year = xmlDoc.getElementsByTagName('year')[0]?.textContent || 'N/A';
+
+                    document.getElementById('name').textContent = name;
+                    document.getElementById('id').textContent = id;
+                    document.getElementById('major').textContent = major;
+                    document.getElementById('year').textContent = year;
+
+                    // Contact Info
+                    const email = xmlDoc.getElementsByTagName('email')[0]?.textContent || 'N/A';
+                    const phone = xmlDoc.getElementsByTagName('phone')[0]?.textContent || 'N/A';
+
+                    document.getElementById('email').textContent = email;
+                    document.getElementById('phone').textContent = phone;
+
+                    // Courses
+                    const courses = xmlDoc.getElementsByTagName('course');
+                    const courseList = document.getElementById('course-list');
+                    courseList.innerHTML = ''; // Clear existing content
+
+                    Array.from(courses).forEach(course => {
+                        const title = course.getElementsByTagName('title')[0]?.textContent || 'N/A';
+                        const code = course.getElementsByTagName('code')[0]?.textContent || 'N/A';
+                        const credits = course.getElementsByTagName('credits')[0]?.textContent || 'N/A';
+
+                        const courseDiv = document.createElement('div');
+                        courseDiv.className = 'course';
+                        courseDiv.innerHTML = `<h3>${title}</h3><p>Code: ${code}</p><p>Credits: ${credits}</p>`;
+                        courseList.appendChild(courseDiv);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching XML data:', error);
+                    document.getElementById('profile-content').innerHTML = 'Failed to load profile data.';
+                });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Student Profile</h1>
+    </header>
+    <main>
+        <section id="personal-info">
+            <h2>Personal Information</h2>
+            <p><strong>Name:</strong> <span id="name"></span></p>
+            <p><strong>ID:</strong> <span id="id"></span></p>
+            <p><strong>Major:</strong> <span id="major"></span></p>
+            <p><strong>Year:</strong> <span id="year"></span></p>
+        </section>
+        <section id="contact-info">
+            <h2>Contact Information</h2>
+            <p><strong>Email:</strong> <span id="email"></span></p>
+            <p><strong>Phone:</strong> <span id="phone"></span></p>
+        </section>
+        <section id="course-info">
+            <h2>Courses</h2>
+            <div id="course-list"></div>
+        </section>
+    </main>
+</body>
+</html>
+
+                    
